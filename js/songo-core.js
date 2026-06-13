@@ -5,7 +5,7 @@
 
 class SongoCore {
     constructor() {
-        this.board = new Array(14).fill(5); // 0-6 North, 7-13 South (counter-clockwise)
+        this.board = new Array(14).fill(4); // 0-6 North, 7-13 South (counter-clockwise)
         this.scores = [0, 0]; // Index 0: North, Index 1: South
         this.turn = 1; // 0: Player 1 (North/NORD), 1: Player 2 (South/SUD)
         this.status = 'playing'; // 'playing', 'finished', 'draw'
@@ -14,7 +14,7 @@ class SongoCore {
     }
 
     reset() {
-        this.board = new Array(14).fill(5);
+        this.board = new Array(14).fill(4);
         this.scores = [0, 0];
         this.turn = 1; // Start with South (customizable)
         this.status = 'playing';

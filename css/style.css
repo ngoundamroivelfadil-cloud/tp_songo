@@ -831,24 +831,67 @@ header h1 {
 .shake { animation: shake 0.4s ease !important; }
 
 /* =========================================
-   RESPONSIVE
+   RESPONSIVE & MOBILE POLISH
    ========================================= */
-@media (max-width: 860px) {
-    .game-layout { grid-template-columns: 70px 1fr 70px; gap: 10px; }
-    .top-stats { grid-template-columns: repeat(2, 1fr); }
-    .bottom-panels { grid-template-columns: 1fr; }
-    .rules-grid { grid-template-columns: 1fr 1fr; }
+@media (max-width: 900px) {
+    .game-layout { grid-template-columns: 80px 1fr 80px; gap: 12px; }
+    .top-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .menu-cards { grid-template-columns: 1fr 1fr; }
-    .menu-hero h1 { font-size: 3.5rem; }
 }
 
-@media (max-width: 600px) {
-    .game-layout { grid-template-columns: 1fr; }
-    .side-panel { flex-direction: row; justify-content: space-around; padding: 12px 16px; }
-    .territory { gap: 8px; }
-    .hole .seed-count { font-size: 1rem; }
-    .menu-cards { grid-template-columns: 1fr; }
+@media (max-width: 680px) {
+    .container { padding: 15px 15px 30px; }
+    .game-layout { 
+        grid-template-columns: 1fr; 
+        grid-template-rows: auto auto auto;
+        gap: 15px; 
+    }
+    .side-panel {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 12px 20px;
+        width: 100%;
+        max-width: 100%;
+    }
+    .side-panel .score-side { font-size: 1.8rem; }
+    .side-panel .player-avatar { width: 30px; height: 30px; font-size: 0.8rem; }
+    
+    .songo-board { padding: 15px 10px; gap: 12px; }
+    .territory { gap: 6px; }
+    .hole { border-width: 1px; }
+    .seed-count { font-size: 0.9rem; }
+    
+    #player0-card { order: 1; }
+    #board { order: 2; }
+    #player1-card { order: 3; }
+}
+
+@media (max-width: 480px) {
+    header h1 { font-size: 1.5rem; }
+    .menu-hero h1 { font-size: 3rem; }
+    .top-stats { grid-template-columns: 1fr; }
     .rules-grid { grid-template-columns: 1fr; }
-    .menu-hero h1 { font-size: 2.8rem; }
-    header { flex-direction: column; align-items: flex-start; }
+    .territory { gap: 4px; }
+    .hole-label { display: none; }
+    .seed-count { font-size: 0.8rem; }
+    .songo-board { border-radius: var(--radius-sm); }
+}
+
+/* Glassmorphism utility */
+.glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Smooth Board Scaling */
+.songo-board {
+    transition: transform 0.3s ease;
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+    .container { padding-top: 5px; }
+    header { padding: 10px 0; margin-bottom: 10px; }
+    .top-stats { display: none; }
 }

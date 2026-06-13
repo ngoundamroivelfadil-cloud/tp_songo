@@ -308,8 +308,42 @@ document.addEventListener('DOMContentLoaded', () => {
             await delay(300);
             hole.classList.remove('picking');
 
+            const seedsToSow = game.board[idx];
             const res = game.move(idx);
             if (res.error) { isAnimating = false; return; }
+
+            // Step-by-step animation
+            const path = getPlayerPath(playerRole);
+            let currPathIdx = path.indexOf(idx);
+            let distributed = 0;
+
+            // Update starting hole to 0 visually
+            const startHole = document.querySelector(`.hole[data-index="${idx}"]`);
+            if (startHole) {
+                startHole.querySelector('.seed-count').textContent = 0;
+                renderSeedDots(startHole, 0);
+            }
+
+            while (distributed < seedsToSow) {
+                currPathIdx = (currPathIdx + 1) % 14;
+                const bIdx = path[currPathIdx];
+                if (bIdx === idx) continue;
+
+                // Rule > 13 skip own territory
+                if (seedsToSow > 13 && distributed >= 13 && ((playerRole === 0 && bIdx <= 6) || (playerRole === 1 && bIdx >= 7))) {
+                    continue;
+                }
+
+                distributed++;
+                const targetHole = document.querySelector(`.hole[data-index="${bIdx}"]`);
+                if (targetHole) {
+                    targetHole.classList.add('sowing');
+                    const currentDisplay = parseInt(targetHole.querySelector('.seed-count').textContent) || 0;
+                    targetHole.querySelector('.seed-count').textContent = currentDisplay + 1;
+                    await delay(800); // Slow motion
+                    targetHole.classList.remove('sowing');
+                }
+            }
 
             updateUI();
             await pushMove().catch(e => console.error('Push failed:', e));
@@ -320,6 +354,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ─── Helpers ──────────────────────────────────────────
     function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+    function getPlayerPath(playerIndex) {
+        return playerIndex === 0
+            ? [0,1,2,3,4,5,6,7,8,9,10,11,12,13]
+            : [13,12,11,10,9,8,7,6,5,4,3,2,1,0];
+    }
+
     // ─── Buttons ──────────────────────────────────────────
     document.getElementById('btn-create').addEventListener('click', createGame);
     document.getElementById('btn-join').addEventListener('click', joinGame);
@@ -328,6 +368,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlKey = new URLSearchParams(window.location.search).get('key');
     if (urlKey) {
         document.getElementById('input-key').value = urlKey;
+        // Auto-join after a small delay to ensure server ping is done
+        setTimeout(() => {
+            document.getElementById('btn-join').click();
+        }, 500);
     }
 });
 

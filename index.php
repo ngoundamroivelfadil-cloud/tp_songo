@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php header('ngrok-skip-browser-warning: true'); ?><!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -133,7 +133,7 @@
 
         // --- Preview Board ---
         (function () {
-            const seeds = [5, 5, 5, 5, 5, 5, 5];
+            const seeds = [4, 4, 4, 4, 4, 4, 4];
             function makeTerritory(containerId, indices, reversed) {
                 const container = document.getElementById(containerId);
                 (reversed ? [...indices].reverse() : indices).forEach((n, i) => {

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS games (
     p1_score INT DEFAULT 0,
     p2_score INT DEFAULT 0,
     current_turn INT DEFAULT 1,
-    status ENUM('waiting', 'playing', 'finished') DEFAULT 'waiting',
+    status VARCHAR(20) DEFAULT 'waiting',
     winner INT DEFAULT NULL,
-    last_move_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    last_move_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

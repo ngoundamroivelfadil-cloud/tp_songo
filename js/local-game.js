@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Pick-up animation
         holeEl.classList.add('picking');
-        await delay(350);
+        await delay(600);
         holeEl.classList.remove('picking');
 
         // Execute core move
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update the count incrementally (add 1 each step)
                 const currentDisplay = parseInt(targetHole.querySelector('.seed-count').textContent) || 0;
                 targetHole.querySelector('.seed-count').textContent = currentDisplay + 1;
-                await delay(140);
+                await delay(800);
                 targetHole.classList.remove('sowing');
             }
         }
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Schedule computer move AFTER animation ends and isAnimating is false
         if (game.status === 'playing' && isVsComputer && game.turn === 0) {
-            setTimeout(executeComputerMove, 700);
+            setTimeout(executeComputerMove, 1200);
         }
     }
 
@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
         p2NameInput.placeholder = "Nom Joueur 2 (SUD)";
         p1NameInput.parentElement.style.display = 'flex';
         namesModal.style.display = 'flex';
-        game.reset();
+        game.reset(); game.board.fill(4);
         updateUI();
     });
 
@@ -356,14 +356,14 @@ document.addEventListener('DOMContentLoaded', () => {
         p1NameInput.value = "Ordinateur";
         p2NameInput.placeholder = "Votre Nom (SUD)";
         namesModal.style.display = 'flex';
-        game.reset();
+        game.reset(); game.board.fill(4);
         game.turn = 1; // Player is South, starts first
         updateUI();
     });
 
     resetBtn.addEventListener('click', () => {
         modal.style.display = 'none';
-        game.reset();
+        game.reset(); game.board.fill(4);
         if (isVsComputer) game.turn = 1;
         updateUI();
     });
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalRestart) {
         modalRestart.addEventListener('click', () => {
             modal.style.display = 'none';
-            game.reset();
+            game.reset(); game.board.fill(4);
             if (isVsComputer) game.turn = 1;
             updateUI();
         });
@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     namesModal.style.display = 'flex';
-    game.reset();
+    game.reset(); game.board.fill(4);
     if (isVsComputer) game.turn = 1;
     updateUI();
 });

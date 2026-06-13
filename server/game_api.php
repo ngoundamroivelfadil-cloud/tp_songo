@@ -22,7 +22,7 @@ try {
 
         case 'create':
             $key          = bin2hex(random_bytes(4)); // 8-char hex key
-            $initialBoard = json_encode(array_fill(0, 14, 5));
+            $initialBoard = json_encode(array_fill(0, 14, 4));
             $stmt = $pdo->prepare(
                 "INSERT INTO games (game_key, board_state, current_turn, status) VALUES (?, ?, 1, 'waiting')"
             );

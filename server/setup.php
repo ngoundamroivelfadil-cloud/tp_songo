@@ -1,24 +1,52 @@
 <?php
 // setup.php
-$host = 'localhost';
-$username = 'root'; // Change if needed
-$password = '';     // Change if needed
-$dbname = 'songo_db';
+$dbType = getenv('DB_TYPE') ?: ($_ENV['DB_TYPE'] ?? ($_SERVER['DB_TYPE'] ?? 'mysql'));
+
+// Force sqlite if we are on Render and no specific DB_HOST is provided
+if (getenv('RENDER') && !getenv('DB_HOST')) {
+    $dbType = 'sqlite';
+}
+
+$host     = getenv('DB_HOST') ?: 'localhost';
+$username = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASS') ?: '';
+$dbname   = getenv('DB_NAME') ?: 'songo_db';
 
 try {
-    // 1. Connect without dbname to create it
-    $pdo = new PDO("mysql:host=$host", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-    echo "<h1>Database '$dbname' ensured!</h1>";
+    if ($dbType === 'sqlite') {
+        $dbPath = __DIR__ . '/songo.sqlite';
+        $pdo = new PDO("sqlite:$dbPath");
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        echo "<h1>SQLite Database ensured!</h1>";
+    } else {
+        // 1. Connect without dbname to create it
+        $pdo = new PDO("mysql:host=$host", $username, $password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+        echo "<h1>MySQL Database '$dbname' ensured!</h1>";
 
-    // 2. Connect with dbname
-    $pdo->exec("USE `$dbname` "); // Just to be sure, though we specify it in next line
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+        // 2. Connect with dbname
+        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    }
     
     $sql = file_get_contents('schema.sql');
-    $pdo->exec($sql);
+    if ($dbType === 'sqlite') {
+        // Remove DB creation/selection
+        $sql = preg_replace('/CREATE DATABASE IF NOT EXISTS.*;/i', '', $sql);
+        $sql = preg_replace('/USE .*;/', '', $sql);
+        // Convert Auto-increment
+        $sql = preg_replace('/INT AUTO_INCREMENT PRIMARY KEY/i', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql);
+        // Remove ENUMs (converted to VARCHAR in schema.sql already, but just in case)
+        $sql = preg_replace('/ENUM\([^)]+\)/i', 'VARCHAR(255)', $sql);
+        // Remove ON UPDATE
+        $sql = preg_replace('/ON UPDATE CURRENT_TIMESTAMP/i', '', $sql);
+    }
+    
+    // Split by ; for multiple statements
+    $queries = array_filter(array_map('trim', explode(';', $sql)));
+    foreach ($queries as $query) {
+        if ($query) $pdo->exec($query);
+    }
     
     echo "<h1>Tables Setup Successful!</h1>";
     echo "<p>The 'games' table has been created/updated.</p>";

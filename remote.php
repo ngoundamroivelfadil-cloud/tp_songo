@@ -86,23 +86,23 @@
             <div class="songo-board" id="board">
                 <div class="territory-label" style="color:var(--north);">↑ NORD — Joueur 1</div>
                 <div class="territory north">
-                    <div class="hole" data-index="0" id="hole-0"><span class="hole-label">N1</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="1" id="hole-1"><span class="hole-label">N2</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="2" id="hole-2"><span class="hole-label">N3</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="3" id="hole-3"><span class="hole-label">N4</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="4" id="hole-4"><span class="hole-label">N5</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="5" id="hole-5"><span class="hole-label">N6</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="6" id="hole-6"><span class="hole-label">N7</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="0" id="hole-0"><span class="hole-label">N1</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="1" id="hole-1"><span class="hole-label">N2</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="2" id="hole-2"><span class="hole-label">N3</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="3" id="hole-3"><span class="hole-label">N4</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="4" id="hole-4"><span class="hole-label">N5</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="5" id="hole-5"><span class="hole-label">N6</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="6" id="hole-6"><span class="hole-label">N7</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
                 </div>
                 <div class="board-divider"></div>
                 <div class="territory south">
-                    <div class="hole" data-index="13" id="hole-13"><span class="hole-label">S1</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="12" id="hole-12"><span class="hole-label">S2</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="11" id="hole-11"><span class="hole-label">S3</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="10" id="hole-10"><span class="hole-label">S4</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="9"  id="hole-9" ><span class="hole-label">S5</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="8"  id="hole-8" ><span class="hole-label">S6</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
-                    <div class="hole" data-index="7"  id="hole-7" ><span class="hole-label">S7</span><span class="seed-count">5</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="13" id="hole-13"><span class="hole-label">S1</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="12" id="hole-12"><span class="hole-label">S2</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="11" id="hole-11"><span class="hole-label">S3</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="10" id="hole-10"><span class="hole-label">S4</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="9"  id="hole-9" ><span class="hole-label">S5</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="8"  id="hole-8" ><span class="hole-label">S6</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
+                    <div class="hole" data-index="7"  id="hole-7" ><span class="hole-label">S7</span><span class="seed-count">4</span><div class="seeds-visual"></div></div>
                 </div>
                 <div class="territory-label" style="color:var(--south);">↓ SUD — Joueur 2</div>
             </div>

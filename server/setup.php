@@ -47,14 +47,6 @@ try {
     foreach ($queries as $query) {
         if ($query) $pdo->exec($query);
     }
-
-    // Migration : Ajouter les colonnes de noms si elles n'existent pas
-    try {
-        $pdo->exec("ALTER TABLE games ADD COLUMN p1_name VARCHAR(100) DEFAULT 'Joueur 1'");
-    } catch (Exception $e) {}
-    try {
-        $pdo->exec("ALTER TABLE games ADD COLUMN p2_name VARCHAR(100) DEFAULT 'Joueur 2'");
-    } catch (Exception $e) {}
     
     echo "<h1>Tables Setup Successful!</h1>";
     echo "<p>The 'games' table has been created/updated.</p>";

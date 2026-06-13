@@ -29,7 +29,6 @@
             <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">
                 Créez une nouvelle partie et partagez la clé à votre adversaire.
             </p>
-            <input type="text" id="p_name_create" class="input-field" placeholder="Votre Nom (ex: Abdel)" style="margin-bottom:12px;">
             <button class="btn btn-primary" id="btn-create" style="width:100%; padding:14px; font-size:1rem;">
                 ✚ Créer une partie
             </button>
@@ -37,7 +36,6 @@
 
         <div class="setup-card">
             <h3>Rejoindre une partie</h3>
-            <input type="text" id="p_name_join" class="input-field" placeholder="Votre Nom (ex: Fadil)" style="margin-bottom:12px;">
             <input type="text" id="input-key" class="input-field"
                    placeholder="Entrez la clé de partie (ex: a1b2c3d4)"
                    autocomplete="off" autocapitalize="none"

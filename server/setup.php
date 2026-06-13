@@ -1,62 +1,34 @@
 <?php
-// setup.php
-$dbType = getenv('DB_TYPE') ?: ($_ENV['DB_TYPE'] ?? ($_SERVER['DB_TYPE'] ?? 'mysql'));
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Force sqlite if we are on Render and no specific DB_HOST is provided
-if (getenv('RENDER') && !getenv('DB_HOST')) {
-    $dbType = 'sqlite';
-}
-
-$host     = getenv('DB_HOST') ?: 'localhost';
-$username = getenv('DB_USER') ?: 'root';
-$password = getenv('DB_PASS') ?: '';
-$dbname   = getenv('DB_NAME') ?: 'songo_db';
+require_once 'db.php';
 
 try {
-    if ($dbType === 'sqlite') {
-        $dbPath = __DIR__ . '/songo.sqlite';
-        $pdo = new PDO("sqlite:$dbPath");
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "<h1>SQLite Database ensured!</h1>";
-    } else {
-        // 1. Connect without dbname to create it
-        $pdo = new PDO("mysql:host=$host", $username, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-        echo "<h1>MySQL Database '$dbname' ensured!</h1>";
-
-        // 2. Connect with dbname
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    }
-    
-    $sql = file_get_contents('schema.sql');
-    if ($dbType === 'sqlite') {
-        // Remove DB creation/selection
-        $sql = preg_replace('/CREATE DATABASE IF NOT EXISTS.*;/i', '', $sql);
-        $sql = preg_replace('/USE .*;/', '', $sql);
-        // Convert Auto-increment
-        $sql = preg_replace('/INT AUTO_INCREMENT PRIMARY KEY/i', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql);
-        // Remove ENUMs (converted to VARCHAR in schema.sql already, but just in case)
-        $sql = preg_replace('/ENUM\([^)]+\)/i', 'VARCHAR(255)', $sql);
-        // Remove ON UPDATE
-        $sql = preg_replace('/ON UPDATE CURRENT_TIMESTAMP/i', '', $sql);
-    }
-    
-    // Force Re-creation if something is broken
+    // 1. Drop existing table to avoid any corruption
     $pdo->exec("DROP TABLE IF EXISTS games");
-    
-    // Split by ; for multiple statements
-    $queries = array_filter(array_map('trim', explode(';', $sql)));
-    foreach ($queries as $query) {
-        if ($query) $pdo->exec($query);
-    }
-    
-    echo "<h1>Database Repaired & Reset Successfully!</h1>";
-    echo "<p>You can now go back to the game and create a party.</p>";
-    echo "<p>Make sure your MySQL server is running and credentials are correct.</p>";
-} catch (PDOException $e) {
-    echo "<h1>Database Setup Failed</h1>";
+
+    // 2. Create the table manually with the exact SQL needed for SQLite
+    $sql = "CREATE TABLE games (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        game_key VARCHAR(50) UNIQUE NOT NULL,
+        player1_id VARCHAR(50) DEFAULT NULL,
+        player2_id VARCHAR(50) DEFAULT NULL,
+        board_state TEXT NOT NULL,
+        p1_score INT DEFAULT 0,
+        p2_score INT DEFAULT 0,
+        current_turn INT DEFAULT 1,
+        status VARCHAR(20) DEFAULT 'waiting',
+        winner INT DEFAULT NULL,
+        last_move_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    $pdo->exec($sql);
+
+    echo "<h1 style='color:green'>SUCCESS: Table 'games' creation forced!</h1>";
+    echo "<p>SQLite database is now ready. <a href='../remote.php'>Go to Online Game</a></p>";
+
+} catch (Exception $e) {
+    echo "<h1 style='color:red'>FAILURE: Setup failed</h1>";
     echo "<p>Error: " . $e->getMessage() . "</p>";
-    echo "<p>Make sure your MySQL server is running and credentials are correct.</p>";
 }
-?>

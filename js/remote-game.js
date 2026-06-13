@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let pollingId    = null;
     let lastTurnSeen = -1;
     let isAnimating  = false;
+    let pNames       = { p1: "Joueur 1", p2: "Joueur 2" };
 
     // ─── DOM ──────────────────────────────────────────────
     const setupScreen  = document.getElementById('setup-screen');
@@ -70,9 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
     async function createGame() {
         const btn = document.getElementById('btn-create');
         btn.disabled = true;
-        btn.textContent = '⏳ Création...';
+        const name = document.getElementById('p_name_create').value.trim() || 'Joueur 2';
         try {
-            const data = await apiCall('create');
+            const data = await apiCall('create', { name });
             if (data && data.success) {
                 gameKey    = data.game_key;
                 playerRole = data.player_role; // 1 = Sud = creator starts
@@ -90,13 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function joinGame() {
+        const name = document.getElementById('p_name_join').value.trim() || 'Joueur 1';
         const key = document.getElementById('input-key').value.trim().toLowerCase();
         if (!key) return alert('Veuillez entrer une clé de partie');
         const btn = document.getElementById('btn-join');
         btn.disabled = true;
         btn.textContent = '⏳ Connexion...';
         try {
-            const data = await apiCall('join', { key });
+            const data = await apiCall('join', { key, name });
             if (data && data.success) {
                 gameKey    = key;
                 playerRole = data.player_role; // 0 = Nord = joiner
@@ -163,6 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 game.turn    = remoteTurn;
                 game.status  = remote.status;
                 game.winner  = remote.winner !== null ? parseInt(remote.winner) : null;
+                pNames.p1    = remote.p1_name || "Joueur 1";
+                pNames.p2    = remote.p2_name || "Joueur 2";
                 updateUI();
             }
 
@@ -277,12 +281,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (game.status === 'draw') {
                 trophyIcon.textContent = 'MATCH NUL';
                 winnerText.textContent = 'Match Nul !';
-            } else if (game.winner === playerRole) {
-                trophyIcon.textContent = 'VICTOIRE';
-                winnerText.textContent = 'Vous avez gagné !';
             } else {
-                trophyIcon.textContent = 'DEFAITE';
-                winnerText.textContent = 'Vous avez perdu...';
+                const winnerName = game.winner === 0 ? pNames.p1 : pNames.p2;
+                trophyIcon.textContent = 'VICTOIRE';
+                winnerText.textContent = `Félicitations ${winnerName} !`;
+                
+                // Add sub-text
+                if (game.winner === playerRole) {
+                    winnerText.innerHTML += `<br><span style="font-size:1rem;color:var(--green)">Vous avez gagné magnifiquement !</span>`;
+                } else {
+                    winnerText.innerHTML += `<br><span style="font-size:1rem;color:var(--red)">L'adversaire a remporté la partie.</span>`;
+                }
             }
             winnerScore.textContent = `${game.scores[0]} – ${game.scores[1]}`;
         }

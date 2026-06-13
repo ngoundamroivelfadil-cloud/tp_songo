@@ -21,13 +21,13 @@ try {
             break;
 
         case 'create':
-            $key          = bin2hex(random_bytes(4)); // 8-char hex key
+            $key          = bin2hex(random_bytes(4)); 
             $initialBoard = json_encode(array_fill(0, 14, 4));
+            $pName        = $_GET['name'] ?? 'Joueur 2';
             $stmt = $pdo->prepare(
-                "INSERT INTO games (game_key, board_state, current_turn, status) VALUES (?, ?, 1, 'waiting')"
+                "INSERT INTO games (game_key, board_state, current_turn, status, p2_name) VALUES (?, ?, 1, 'waiting', ?)"
             );
-            $stmt->execute([$key, $initialBoard]);
-            // Creator is SUD (player_role = 1), who plays first (turn = 1)
+            $stmt->execute([$key, $initialBoard, $pName]);
             echo json_encode(['success' => true, 'game_key' => $key, 'player_role' => 1]);
             break;
 
@@ -40,8 +40,9 @@ try {
                 if ($game['status'] !== 'waiting') {
                     echo json_encode(['success' => false, 'error' => 'Partie déjà en cours ou terminée.']);
                 } else {
-                    $upd = $pdo->prepare("UPDATE games SET status = 'playing' WHERE game_key = ?");
-                    $upd->execute([$key]);
+                    $pName = $_GET['name'] ?? 'Joueur 1';
+                    $upd = $pdo->prepare("UPDATE games SET status = 'playing', p1_name = ? WHERE game_key = ?");
+                    $upd->execute([$pName, $key]);
                     // Joiner is NORD (player_role = 0)
                     echo json_encode(['success' => true, 'player_role' => 0]);
                 }

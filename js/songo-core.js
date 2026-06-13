@@ -251,15 +251,18 @@ class SongoCore {
     }
 
     checkEndGame() {
-        if (this.scores[0] >= 40) {
+        const totalSeeds = 56; // 14 holes * 4 seeds
+        const winThreshold = Math.floor(totalSeeds / 2) + 1;
+
+        if (this.scores[0] >= winThreshold) {
             this.status = 'finished';
             this.winner = 0;
-        } else if (this.scores[1] >= 40) {
+        } else if (this.scores[1] >= winThreshold) {
             this.status = 'finished';
             this.winner = 1;
         } else {
             const totalOnBoard = this.board.reduce((a, b) => a + b, 0);
-            if (totalOnBoard < 10) {
+            if (totalOnBoard < 6) { // Less than 6 seeds remaining
                 this.finishGame();
             }
         }

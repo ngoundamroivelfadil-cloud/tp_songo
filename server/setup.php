@@ -42,15 +42,18 @@ try {
         $sql = preg_replace('/ON UPDATE CURRENT_TIMESTAMP/i', '', $sql);
     }
     
+    // Force Re-creation if something is broken
+    $pdo->exec("DROP TABLE IF EXISTS games");
+    
     // Split by ; for multiple statements
     $queries = array_filter(array_map('trim', explode(';', $sql)));
     foreach ($queries as $query) {
         if ($query) $pdo->exec($query);
     }
     
-    echo "<h1>Tables Setup Successful!</h1>";
-    echo "<p>The 'games' table has been created/updated.</p>";
-    echo "<a href='../index.php'>Go to Game</a>";
+    echo "<h1>Database Repaired & Reset Successfully!</h1>";
+    echo "<p>You can now go back to the game and create a party.</p>";
+    echo "<p>Make sure your MySQL server is running and credentials are correct.</p>";
 } catch (PDOException $e) {
     echo "<h1>Database Setup Failed</h1>";
     echo "<p>Error: " . $e->getMessage() . "</p>";

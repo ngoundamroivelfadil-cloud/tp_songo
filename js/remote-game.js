@@ -59,11 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
             opts.body = JSON.stringify(body);
         }
 
-        const res = await fetch(url, opts);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const txt = await res.text();
-        try { return JSON.parse(txt); }
-        catch(e) { throw new Error('Réponse serveur invalide'); }
+        const resp = await fetch(url.toString(), opts);
+        if (!resp.ok) {
+            const errData = await resp.json().catch(() => ({}));
+            throw new Error(`HTTP ${resp.status} - ${errData.error || 'Erreur inconnue'}`);
+        }
+        return await resp.json();
     }
 
     // ─── Create / Join ────────────────────────────────────

@@ -94,7 +94,12 @@ try {
     }
 
 } catch (Exception $e) {
+    header('Content-Type: application/json');
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode([
+        'success' => false, 
+        'error' => $e->getMessage(),
+        'debug' => 'Erreur API'
+    ]);
 }
 ?>
